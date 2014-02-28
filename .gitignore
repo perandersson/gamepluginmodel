@@ -7,3 +7,9 @@
 **/Debug/*
 **/Release/*
 projects/vs2013/ipch/*
+bin/*.dll
+bin/*.lib
+bin/*.exp
+bin/*.exe
+bin/*.ilk
+bin/*.pdb
