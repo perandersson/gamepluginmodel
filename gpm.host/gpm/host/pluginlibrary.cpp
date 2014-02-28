@@ -22,10 +22,11 @@ PluginLibrary::~PluginLibrary()
 	}
 }
 
-void PluginLibrary::Start(PluginContext* pluginContext)
+bool PluginLibrary::Start(PluginContext* pluginContext)
 {
 	mPlugin = new Plugin(pluginContext);
-	mPluginActivator->Start(mPlugin);
+	GPM_RES res = mPluginActivator->Start(mPlugin);
+	return res == GPM_OK;
 }
 
 void PluginLibrary::Stop()

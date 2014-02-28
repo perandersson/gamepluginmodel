@@ -57,11 +57,12 @@ public:
 	DemoGame_Activator() {}
 	virtual ~DemoGame_Activator() {}
 
-	virtual void STDCALL Start(IPlugin* plugin) {
+	virtual GPM_RES STDCALL Start(IPlugin* plugin) {
 		std::cout << "DemoGame_Activator::Start" << std::endl;
 		mGame = new DemoGame();
 		plugin->AddObjectListener(this);
 		plugin->RegisterObject(GPM_TYPEOF(IGame), mGame);
+		return GPM_OK;
 	}
 
 	virtual void STDCALL Stop() {

@@ -12,7 +12,7 @@ public:
 
 	//
 	// Start the plugin and invoke the activator
-	void Start(PluginContext* pluginContext);
+	bool Start(PluginContext* pluginContext);
 
 	//
 	// Invoke the activator and stop the plugin

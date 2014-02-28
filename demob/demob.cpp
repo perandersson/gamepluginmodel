@@ -60,10 +60,11 @@ public:
 	DemoB_Activator() {}
 	virtual ~DemoB_Activator() {}
 
-	virtual void STDCALL Start(IPlugin* plugin) {
+	virtual GPM_RES STDCALL Start(IPlugin* plugin) {
 		std::cout << "DemoB_Activator:Start" << std::endl;
 		mComponent = new DemoB_Component();
 		plugin->RegisterObject(GPM_TYPEOF(IComponent), mComponent);
+		return GPM_OK;
 	}
 
 	virtual void STDCALL Stop() {

@@ -57,11 +57,16 @@ void PluginContext::LoadPlugin(const char* path)
 	// Add the new plugin into the opened plugins vector and start it
 	auto pluginLibrary = new PluginLibrary(library, activator);
 	auto ptr = std::shared_ptr<PluginLibrary>(pluginLibrary);
-	mLibraries.push_back(ptr);
 #ifdef _DEBUG
 	Debug(ToMessage("Plugin activator starting for library: '%s'", path).c_str());
 #endif
-	ptr->Start(this);
+	if (ptr->Start(this)) {
+		mLibraries.push_back(ptr);
+	}
+	else {
+		Error(ToMessage("Plugin activator for library: '%s' failed to start. Stopping...", path).c_str());
+		ptr->Stop();
+	}
 #ifdef _DEBUG
 	Debug(ToMessage("Plugin activator started for library: '%s'", path).c_str());
 #endif
