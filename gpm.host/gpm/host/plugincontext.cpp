@@ -25,10 +25,10 @@ PluginContext::PluginContext()
 PluginContext::~PluginContext()
 {
 	// Unload libraries incase the host application forgot to invoke the UnloadLibraries method.
-	UnloadLibraries();
+	UnloadPlugins();
 }
 
-void PluginContext::LoadLibrary(const char* path)
+void PluginContext::LoadPlugin(const char* path)
 {
 	if (path == nullptr) {
 		Error("Invalid argument: 'path'");
@@ -67,7 +67,7 @@ void PluginContext::LoadLibrary(const char* path)
 #endif
 }
 
-void PluginContext::UnloadLibraries()
+void PluginContext::UnloadPlugins()
 {
 #ifdef _DEBUG
 	Debug("Unloading libraries");

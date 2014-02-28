@@ -53,15 +53,14 @@ typedef unsigned int GPM_UINT32;
 #define GPM_OK 1
 #define GPM_ERR 0
 
-/**
-*	Define a plugin object type ID (ID for this specific interface).
-*
-*	@param Type
-*			The interface type
-*	@param UID
-*			A unique ID number. It's up to your project to select which ones you want. 
-*			Numbers below 10 are reserved for the plugin framework.
-*/
+//
+// Define a plugin object type ID (ID for this specific interface).
+//
+// @param Type
+//			The interface type
+// @param UID
+//			A unique ID number. It's up to your project to select which ones you want. 
+//			Numbers below 10 are reserved for the plugin framework.
 #define DEFINE_GPMTYPE(Type, UID) static const GPM_TYPE Type##_ID = UID##LL
 
 //

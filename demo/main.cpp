@@ -92,13 +92,13 @@ int main()
 
 	// Load libraries
 #ifdef _DEBUG
-	context.LoadLibrary("demo.game_d");
-	context.LoadLibrary("demoa_d");
-	context.LoadLibrary("demob_d");
+	context.LoadPlugin("demo.game_d");
+	context.LoadPlugin("demoa_d");
+	context.LoadPlugin("demob_d");
 #else
-	context.LoadLibrary("demo.game");
-	context.LoadLibrary("demoa");
-	context.LoadLibrary("demob");
+	context.LoadPlugin("demo.game");
+	context.LoadPlugin("demoa");
+	context.LoadPlugin("demob");
 #endif
 
 	auto object = context.GetObject(GPM_TYPEOF(IGame));
@@ -111,7 +111,7 @@ int main()
 	}
 
 	// Unload libraries
-	context.UnloadLibraries();
+	context.UnloadPlugins();
 
 	std::cout << "Press any key to continue" << std::endl;
 	std::cin.get();

@@ -6,9 +6,6 @@
 #include <list>
 #include <memory>
 
-/**
-*
-*/
 class Plugin : public IPlugin
 {
 	typedef std::vector<std::shared_ptr<ObjectReference>> References;
@@ -18,22 +15,19 @@ public:
 	Plugin(PluginContext* pluginContext);
 	virtual ~Plugin();
 
-	/**
-	*	Retrieves the first plugin matching the supplied type
-	*
-	*	@param type
-	*	@return
-	*/
+	//
+	// Retrieves the first plugin matching the supplied type
+	//
+	// @param type
+	// @return
 	IPluginObject* FindObjectByType(GPM_TYPE type) const;
 
-	/**
-	*	Unload all the registered objects in this plugin
-	*/
+	//
+	// Unload all the registered objects in this plugin
 	void UnloadObjects();
 
-	/**
-	*	Notify all the object listeners added to this plugin
-	*/
+	//
+	// Notify all the object listeners added to this plugin
 	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status);
 
 public:

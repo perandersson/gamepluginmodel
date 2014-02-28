@@ -25,12 +25,12 @@ public:
 	//
 	// @param path
 	//			The relative path to the dynamic library (without the suffix).
-	void LoadLibrary(const char* path);
+	void LoadPlugin(const char* path);
 
 	//
 	//	Unload all loaded libraries
 	//
-	void UnloadLibraries();
+	void UnloadPlugins();
 
 	//
 	// Register a global object and expose it into the plugin framework
