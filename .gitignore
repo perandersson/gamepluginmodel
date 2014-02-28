@@ -1,0 +1,9 @@
+**/*.sdf
+**/*.opensdf
+**/*.suo
+**/*.obj
+**/*.pdb
+**/*.vsp
+**/Debug/*
+**/Release/*
+projects/vs2013/ipch/*
