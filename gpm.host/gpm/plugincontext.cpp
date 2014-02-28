@@ -2,8 +2,22 @@
 #include "moduleloader.h"
 #include "pluginlibrary.h"
 #include <iostream>
+#include <string>
+#include <stdarg.h>
+
+namespace {
+	std::string ToMessage(const char* message, ...) {
+		char tmp[1024];
+		va_list arglist;
+		va_start(arglist, message);
+		vsprintf_s(tmp, 1024, message, arglist);
+		va_end(arglist);
+		return std::string(tmp);
+	}
+}
 
 PluginContext::PluginContext()
+: mLogger(nullptr)
 {
 
 }
@@ -17,26 +31,26 @@ PluginContext::~PluginContext()
 void PluginContext::LoadLibrary(const char* path)
 {
 	if (path == nullptr) {
-		// SetLastError(PL_ERRCODE_INVALIDARGUMENT);
+		Error("Invalid argument: 'path'");
 		return;
 	}
 
 	auto library = ModuleLoader::GetLibraryHandle(path);
 	if (library == nullptr) {
-		//SetLastError(PL_ERRCODE_LIBRARYNOTFOUND);
+		Error(ToMessage("Library: '%s' not found", path).c_str());
 		return;
 	}
 
 	auto getActivator = ModuleLoader::GetFunction<GPM1_GetActivatorFunc>(library, "GPM1_GetActivator");
 	if (getActivator == nullptr) {
 		ModuleLoader::UnloadLibrary(library);
-		//SetLastError(PL_ERRCODE_MISSINGENTRYPOINT);
+		Error(ToMessage("Library: '%s' does not have the entrypoint: 'GPM1_GetActivator'", path).c_str());
 		return;
 	}
 
 	auto activator = (*getActivator)();
 	if (activator == nullptr) {
-		// SetLastError(PL_ERRCODE_ENTRYPOINTFAILURE);
+		Error(ToMessage("Invalid entrypoint received for library: '%s'", path).c_str());
 		return;
 	}
 
@@ -44,11 +58,21 @@ void PluginContext::LoadLibrary(const char* path)
 	auto pluginLibrary = new PluginLibrary(library, activator);
 	auto ptr = std::shared_ptr<PluginLibrary>(pluginLibrary);
 	mLibraries.push_back(ptr);
+#ifdef _DEBUG
+	Debug(ToMessage("Plugin activator starting for library: '%s'", path).c_str());
+#endif
 	ptr->Start(this);
+#ifdef _DEBUG
+	Debug(ToMessage("Plugin activator started for library: '%s'", path).c_str());
+#endif
 }
 
 void PluginContext::UnloadLibraries()
 {
+#ifdef _DEBUG
+	Debug("Unloading libraries");
+#endif
+
 	mGlobalObjects.clear();
 
 	Libraries::size_type size = mLibraries.size();
@@ -56,6 +80,10 @@ void PluginContext::UnloadLibraries()
 		mLibraries[i]->Stop();
 	}
 	mLibraries.clear();
+
+#ifdef _DEBUG
+	Debug("Libraries unloaded");
+#endif
 }
 
 void PluginContext::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status)
@@ -87,9 +115,23 @@ void PluginContext::UnregisterGlobalObject(IPluginObject* object)
 	}
 }
 
-void PluginContext::Log(const char* message)
+void PluginContext::Error(const char* message)
 {
-	std::cout << "PLUGINCONTEXT: " << message << std::endl;
+	if (mLogger != nullptr)
+		mLogger->Error(message);
+	else
+		std::cerr << "[ERROR] " << message << std::endl;
+}
+
+void PluginContext::Debug(const char* message)
+{
+	if (mLogger != nullptr)
+		mLogger->Error(message);
+	else {
+#ifdef _DEBUG
+		std::cout << "[DEBUG] " << message << std::endl;
+#endif
+	}
 }
 
 IPluginObject* STDCALL PluginContext::GetObject(GPM_TYPE type)
@@ -105,7 +147,7 @@ IPluginObject* STDCALL PluginContext::GetObject(GPM_TYPE type)
 
 	Libraries::size_type libraryCount = mLibraries.size();
 	for (Libraries::size_type i = 0; i < libraryCount; ++i) {
-		auto object = mLibraries[i]->FindObject(type);
+		auto object = mLibraries[i]->FindObjectByType(type);
 		if (object != nullptr) {
 			object->AddRef();
 			return object;
@@ -132,4 +174,9 @@ GPM_UINT32 STDCALL PluginContext::GetObjects(GPM_TYPE type, IPluginObject** _out
 	auto result = GetObject(type);
 	_out_Objects[0] = result;
 	return 1;
+}
+
+void STDCALL PluginContext::SetLogger(ILogger* logger)
+{
+	mLogger = logger;
 }

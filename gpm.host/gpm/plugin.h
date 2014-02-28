@@ -24,7 +24,7 @@ public:
 	*	@param type
 	*	@return
 	*/
-	IPluginObject* FindObject(GPM_TYPE type) const;
+	IPluginObject* FindObjectByType(GPM_TYPE type) const;
 
 	/**
 	*	Unload all the registered objects in this plugin

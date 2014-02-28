@@ -26,7 +26,7 @@ public:
 	*	@param type
 	*	@return
 	*/
-	IPluginObject* FindObject(GPM_TYPE type) const;
+	IPluginObject* FindObjectByType(GPM_TYPE type) const;
 
 	/**
 	*	Notify all the object listeners added to this plugin

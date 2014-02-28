@@ -12,7 +12,7 @@ Plugin::~Plugin()
 	
 }
 
-IPluginObject* Plugin::FindObject(GPM_TYPE type) const
+IPluginObject* Plugin::FindObjectByType(GPM_TYPE type) const
 {
 	References::size_type size = mReferences.size();
 	for (References::size_type i = 0; i < size; ++i) {

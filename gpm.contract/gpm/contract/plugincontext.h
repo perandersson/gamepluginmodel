@@ -1,5 +1,6 @@
 #pragma once
 #include "pluginobject.h"
+#include "logger.h"
 
 /**
 *	This interface symbolizes the entire lifetime of the host application. 
@@ -42,4 +43,10 @@ struct PLUGIN_API IPluginContext
 	*	@return How many objects where found
 	*/
 	virtual GPM_UINT32 STDCALL GetObjects(GPM_TYPE type, IPluginObject** _out_Objects, GPM_UINT32 objectsSize) = 0;
+
+	//
+	// Set a logger used by the plugin context
+	//
+	// @param logger
+	virtual void STDCALL SetLogger(ILogger* logger) = 0;
 };

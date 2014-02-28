@@ -52,7 +52,13 @@ public:
 	// Perform logging
 	//
 	// @param message
-	virtual void Log(const char* message);
+	void Error(const char* message);
+
+	//
+	// Perform logging
+	//
+	// @param message
+	void Debug(const char* message);
 
 protected:
 	//
@@ -68,8 +74,10 @@ public:
 	virtual IPluginObject* STDCALL GetObject(GPM_TYPE type);
 	virtual IPluginObject* STDCALL GetObject(GPM_TYPE type, const char* filter);
 	virtual GPM_UINT32 STDCALL GetObjects(GPM_TYPE type, IPluginObject** _out_Objects, GPM_UINT32 objectsSize);
+	virtual void STDCALL SetLogger(ILogger* logger);
 
 private:
 	Libraries mLibraries;
 	References mGlobalObjects;
+	ILogger* mLogger;
 };

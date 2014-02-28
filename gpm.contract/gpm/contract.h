@@ -4,6 +4,7 @@
 #include "contract/pluginactivator.h"
 #include "contract/plugincontext.h"
 #include "contract/pluginobject.h"
+#include "contract/logger.h"
 
 DEFINE_GPMTYPE(IPluginObject, 1);
 

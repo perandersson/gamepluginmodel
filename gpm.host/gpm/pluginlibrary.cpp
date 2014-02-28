@@ -34,9 +34,9 @@ void PluginLibrary::Stop()
 	mPlugin->UnloadObjects();
 }
 
-IPluginObject* PluginLibrary::FindObject(GPM_TYPE type) const
+IPluginObject* PluginLibrary::FindObjectByType(GPM_TYPE type) const
 {
-	return mPlugin->FindObject(type);
+	return mPlugin->FindObjectByType(type);
 }
 
 void PluginLibrary::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status)
