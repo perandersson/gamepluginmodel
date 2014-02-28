@@ -79,3 +79,7 @@ typedef unsigned int GPM_UINT32;
 // @param Inherits
 //			The class that the new interface inherits from. If nothing then specify IPluginObject
 #define DECLARE_INTERFACE(Name, Inherits) struct PLUGIN_API Name : public Inherits
+
+//
+// Releases the supplied object, if it's not null
+#define SAFE_RELEASE(Object) if(Object != nullptr) Object->Release();

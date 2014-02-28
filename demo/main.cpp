@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "demo/contract.h"
-#include <gpm/plugincontext.h>
+#include <gpm/host/plugincontext.h>
 #include <algorithm>
 #include <cassert>
 

@@ -11,37 +11,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\gpm.host\gpm\plugincontext.h">
+    <ClCompile Include="..\..\gpm.host\gpm\host\moduleloader.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpm.host\gpm\moduleloader.h">
+    </ClCompile>
+    <ClCompile Include="..\..\gpm.host\gpm\host\objectreference.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpm.host\gpm\pluginlibrary.h">
+    </ClCompile>
+    <ClCompile Include="..\..\gpm.host\gpm\host\plugin.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpm.host\gpm\plugin.h">
+    </ClCompile>
+    <ClCompile Include="..\..\gpm.host\gpm\host\plugincontext.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpm.host\gpm\objectreference.h">
+    </ClCompile>
+    <ClCompile Include="..\..\gpm.host\gpm\host\pluginlibrary.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\gpm.host\gpm\plugincontext.cpp">
+    <ClInclude Include="..\..\gpm.host\gpm\host\moduleloader.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gpm.host\gpm\moduleloader.cpp">
+    </ClInclude>
+    <ClInclude Include="..\..\gpm.host\gpm\host\objectreference.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gpm.host\gpm\pluginlibrary.cpp">
+    </ClInclude>
+    <ClInclude Include="..\..\gpm.host\gpm\host\plugin.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gpm.host\gpm\plugin.cpp">
+    </ClInclude>
+    <ClInclude Include="..\..\gpm.host\gpm\host\plugincontext.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gpm.host\gpm\objectreference.cpp">
+    </ClInclude>
+    <ClInclude Include="..\..\gpm.host\gpm\host\pluginlibrary.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
 </Project>

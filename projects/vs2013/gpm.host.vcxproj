@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\gpm.host\gpm\moduleloader.h" />
-    <ClInclude Include="..\..\gpm.host\gpm\plugin.h" />
-    <ClInclude Include="..\..\gpm.host\gpm\plugincontext.h" />
-    <ClInclude Include="..\..\gpm.host\gpm\pluginlibrary.h" />
-    <ClInclude Include="..\..\gpm.host\gpm\objectreference.h" />
+    <ClCompile Include="..\..\gpm.host\gpm\host\moduleloader.cpp" />
+    <ClCompile Include="..\..\gpm.host\gpm\host\objectreference.cpp" />
+    <ClCompile Include="..\..\gpm.host\gpm\host\plugin.cpp" />
+    <ClCompile Include="..\..\gpm.host\gpm\host\plugincontext.cpp" />
+    <ClCompile Include="..\..\gpm.host\gpm\host\pluginlibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\gpm.host\gpm\moduleloader.cpp" />
-    <ClCompile Include="..\..\gpm.host\gpm\plugin.cpp" />
-    <ClCompile Include="..\..\gpm.host\gpm\plugincontext.cpp" />
-    <ClCompile Include="..\..\gpm.host\gpm\pluginlibrary.cpp" />
-    <ClCompile Include="..\..\gpm.host\gpm\objectreference.cpp" />
+    <ClInclude Include="..\..\gpm.host\gpm\host\moduleloader.h" />
+    <ClInclude Include="..\..\gpm.host\gpm\host\objectreference.h" />
+    <ClInclude Include="..\..\gpm.host\gpm\host\plugin.h" />
+    <ClInclude Include="..\..\gpm.host\gpm\host\plugincontext.h" />
+    <ClInclude Include="..\..\gpm.host\gpm\host\pluginlibrary.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4A7C62B8-223F-461C-8BDB-94E2A7AB08FB}</ProjectGuid>
