@@ -2,6 +2,7 @@
 #include "gpm/contract.h"
 #include <vector>
 #include <memory>
+#include <list>
 
 class Plugin;
 class PluginLibrary;
@@ -14,6 +15,7 @@ class PluginContext : public IPluginContext
 {
 	typedef std::vector<std::shared_ptr<PluginLibrary>> Libraries;
 	typedef std::vector<std::shared_ptr<ObjectReference>> References;
+	typedef std::list<IObjectListener*> ObjectListeners;
 	friend class Plugin;
 
 public:
@@ -73,11 +75,15 @@ protected:
 public:
 	virtual IPluginObject* STDCALL GetObject(GPM_TYPE type);
 	virtual IPluginObject* STDCALL GetObject(GPM_TYPE type, const char* filter);
+	virtual void STDCALL AddObjectListener(IObjectListener* listener);
+	virtual void STDCALL AddObjectListener(IObjectListener* listener, const char* filter);
+	virtual void STDCALL RemoveObjectListener(IObjectListener* listener);
 	virtual GPM_UINT32 STDCALL GetObjects(GPM_TYPE type, IPluginObject** _out_Objects, GPM_UINT32 objectsSize);
 	virtual void STDCALL SetLogger(ILogger* logger);
 
 private:
 	Libraries mLibraries;
 	References mGlobalObjects;
+	ObjectListeners mObjectListeners;
 	ILogger* mLogger;
 };

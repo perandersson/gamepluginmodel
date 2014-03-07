@@ -97,6 +97,16 @@ void PluginContext::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, 
 	for (Libraries::size_type i = 0; i < size; ++i) {
 		mLibraries[i]->NotifyObjectListeners(type, object, status);
 	}
+
+	// Notify the listeners located on plugin-context level (i.e. the host application listeners)
+	ObjectListeners::iterator it = mObjectListeners.begin();
+	ObjectListeners::const_iterator end = mObjectListeners.end();
+	for (; it != end; ++it) {
+		auto listener = (*it);
+		object->AddRef();
+		listener->OnObjectChanged(type, object, status);
+		object->Release();
+	}
 }
 
 void PluginContext::RegisterGlobalObject(GPM_TYPE type, IPluginObject* object)
@@ -179,6 +189,27 @@ GPM_UINT32 STDCALL PluginContext::GetObjects(GPM_TYPE type, IPluginObject** _out
 	auto result = GetObject(type);
 	_out_Objects[0] = result;
 	return 1;
+}
+
+void STDCALL PluginContext::AddObjectListener(IObjectListener* listener)
+{
+	// TODO Add support for filter!!!
+	mObjectListeners.push_back(listener);
+}
+
+void STDCALL PluginContext::AddObjectListener(IObjectListener* listener, const char* filter)
+{
+	// TODO Add support for filter!!!
+	mObjectListeners.push_back(listener);
+}
+
+void STDCALL PluginContext::RemoveObjectListener(IObjectListener* listener)
+{
+	ObjectListeners::iterator it = std::find(mObjectListeners.begin(), mObjectListeners.end(), listener);
+	if (it == mObjectListeners.end())
+		return;
+
+	mObjectListeners.erase(it);
 }
 
 void STDCALL PluginContext::SetLogger(ILogger* logger)

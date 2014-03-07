@@ -41,6 +41,29 @@ struct PLUGIN_API IPluginContext
 	virtual GPM_UINT32 STDCALL GetObjects(GPM_TYPE type, IPluginObject** _out_Objects, GPM_UINT32 objectsSize) = 0;
 
 	//
+	// Listen for object registrations. 
+	//
+	// @param listener
+	//			The listener instance
+	virtual void STDCALL AddObjectListener(IObjectListener* listener) = 0;
+
+	//
+	// Listen for object registrations given a predetermained filter. 
+	//
+	// @param listener
+	//			The listener instance
+	// @param filter
+	//			The object filter
+	virtual void STDCALL AddObjectListener(IObjectListener* listener, const char* filter) = 0;
+
+	//
+	// Remove an object listener
+	//
+	// @param listener
+	//			The listener instance
+	virtual void STDCALL RemoveObjectListener(IObjectListener* listener) = 0;
+
+	//
 	// Set a logger used by the plugin context
 	//
 	// @param logger
