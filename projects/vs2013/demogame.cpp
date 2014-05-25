@@ -41,11 +41,11 @@ public:
 	virtual void STDCALL OnObjectChanged(GPM_TYPE type, IPluginObject* object, Status status) {
 		if (status == STATUS_REGISTERED) {
 			if (type == IID_Demo::IPlayer) {
-				IPlayer* player = object->GetInterface<IPlayer>();  assert(player != nullptr);
+				IPlayer* player = interface_cast<IPlayer>(object);  assert(player != nullptr);
 				std::cout << "IPlayer is registered" << std::endl;
 			}
 			else if (type == IID_Demo::IComponent) {
-				IComponent* component = object->GetInterface<IComponent>(); assert(component != nullptr);
+				IComponent* component = interface_cast<IComponent>(object); assert(component != nullptr);
 				std::cout << "IComponent is registered" << std::endl;
 			}
 		}

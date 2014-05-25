@@ -39,23 +39,26 @@ struct PLUGIN_API IPluginObject
 	//			A memory location where we put the new pointer
 	// @return GPM_OK if successfull; GPM_ERR otherwise;
 	virtual GPM_RES STDCALL ToInterface(GPM_TYPE type, IPluginObject** _out_Ptr) = 0;
-
-	//
-	// Converts this into the supplied type - if possible.
-	//
-	// @param type
-	//			The type we want to convert this object into
-	// @return A valid pointer if possible; nullptr otherwise
-	template<typename T>
-	T* STDCALL GetInterface() {
-		T* ptr = nullptr;
-		if (ToInterface(T::TypeID, (IPluginObject**)(&ptr)) != GPM_OK) {
-			return nullptr;
-		}
-		ptr->Release();
-		return ptr;
-	}
 };
+
+//
+// Converts this into the supplied type - if possible.
+//
+// @param type
+//			The type we want to convert this object into
+// @return A valid pointer if possible; nullptr otherwise
+template<class T>
+inline T* interface_cast(IPluginObject* obj) {
+	if (obj == nullptr)
+		return nullptr;
+
+	T* ptr = nullptr;
+	if (obj->ToInterface(T::TypeID, (IPluginObject**)(&ptr)) != GPM_OK) {
+		return nullptr;
+	}
+	ptr->Release();
+	return ptr;
+}
 
 template<GPM_TYPE ID>
 struct PLUGIN_API TPluginInterface : public IPluginObject

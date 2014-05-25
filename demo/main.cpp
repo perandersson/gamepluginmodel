@@ -72,7 +72,7 @@ int main()
 
 	auto object = context.GetObject(IID_Demo::IGame);
 	if (object != nullptr) {
-		IGame* game = object->GetInterface<IGame>(); assert(game != nullptr);
+		IGame* game = interface_cast<IGame>(object); assert(game != nullptr);
 		game->StartGame();
 		game->Release();
 	}
