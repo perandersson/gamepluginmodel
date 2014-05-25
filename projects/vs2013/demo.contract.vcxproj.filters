@@ -24,6 +24,9 @@
     <ClInclude Include="..\..\demo.contract\demo\contract\game.h">
       <Filter>contract</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\demo.contract\demo\contract\typeids.h">
+      <Filter>contract</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\demo.contract\demo\contract.cpp" />

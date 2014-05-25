@@ -18,6 +18,7 @@
     <ClInclude Include="..\..\demo.contract\demo\contract\component.h" />
     <ClInclude Include="..\..\demo.contract\demo\contract\game.h" />
     <ClInclude Include="..\..\demo.contract\demo\contract\player.h" />
+    <ClInclude Include="..\..\demo.contract\demo\contract\typeids.h" />
     <ClInclude Include="..\..\demo.contract\demo\contract\vector2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

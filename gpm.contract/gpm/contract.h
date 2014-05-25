@@ -6,5 +6,11 @@
 #include "contract/pluginobject.h"
 #include "contract/logger.h"
 
-DEFINE_GPMTYPE(IPluginObject, 1);
+struct IID_GamePluginModel {
+	enum Enum {
+		IPluginObject = 1,
 
+		// Next free ID
+		Next
+	};
+};

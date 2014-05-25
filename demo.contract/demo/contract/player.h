@@ -1,15 +1,18 @@
 #pragma once
 #include <gpm/contract.h>
+#include "typeids.h"
 #include "component.h"
 #include "vector2.h"
 
-DECLARE_INTERFACE(IPlayer, IPluginObject)
+struct PLUGIN_API IPlayer : public TPluginInterface<IID_Demo::IPlayer>
 {
-	virtual void AddComponent(IComponent* component) = 0;
+	virtual STDCALL ~IPlayer() {}
 
-	virtual void RemoveComponent(IComponent* component) = 0;
+	virtual void STDCALL AddComponent(IComponent* component) = 0;
 
-	virtual void SetPosition(const VECTOR2& position) = 0;
+	virtual void STDCALL RemoveComponent(IComponent* component) = 0;
 
-	virtual void GetPosition(PVECTOR2 _out_Position) = 0;
+	virtual void STDCALL SetPosition(const VECTOR2& position) = 0;
+
+	virtual const PVECTOR2 STDCALL GetPosition() = 0;
 };

@@ -30,6 +30,7 @@ typedef IPluginActivator*(*GPM1_GetActivatorFunc)();
 #define DEFINE_ACTIVATOR(ActivatorType) \
 extern "C" { \
 	PLUGIN_API IPluginActivator* CDECL GPM1_GetActivator() { \
+		std::cout << "Getting activator: "#ActivatorType << std::endl; \
 		return new ActivatorType(); \
 	}\
 }

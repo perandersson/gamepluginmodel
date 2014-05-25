@@ -2,7 +2,9 @@
 #include <gpm/contract.h>
 #include "player.h"
 
-DECLARE_INTERFACE(IGame, IPluginObject)
+struct PLUGIN_API IGame : public TPluginInterface<IID_Demo::IGame>
 {
-	virtual void StartGame() = 0;
+	virtual STDCALL ~IGame() {}
+
+	virtual void STDCALL StartGame() = 0;
 };

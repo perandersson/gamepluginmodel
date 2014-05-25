@@ -11,7 +11,7 @@
 class DemoPlayer : public IPlayer
 {
 public:
-	DemoPlayer() : mRefCount(1) {
+	DemoPlayer() {
 
 	}
 	
@@ -19,13 +19,13 @@ public:
 
 	}
 	
-	virtual void AddComponent(IComponent* component) {
+	virtual void STDCALL AddComponent(IComponent* component) {
 		component->AddRef();
 		mComponents.push_back(component);
 		component->OnComponentAdded(this);
 	}
 
-	virtual void RemoveComponent(IComponent* component) {
+	virtual void STDCALL RemoveComponent(IComponent* component) {
 		std::vector<IComponent*>::iterator it = std::find(mComponents.begin(), mComponents.end(), component);
 		if (it == mComponents.end())
 			return;
@@ -35,48 +35,17 @@ public:
 		component->Release();
 	}
 
-	virtual void SetPosition(const VECTOR2& position) {
+	virtual void STDCALL SetPosition(const VECTOR2& position) {
 		mPosition = position;
 	}
 
-	virtual void GetPosition(PVECTOR2 _out_Position) {
-		*_out_Position = mPosition;
-	}
-
-public:
-	virtual GPM_UINT64 STDCALL AddRef() {
-		return ++mRefCount;
-	}
-	
-	virtual GPM_UINT64 STDCALL Release() {
-		if (--mRefCount == 0) {
-			delete this;
-			return 0;
-		}
-		return mRefCount;
-	}
-
-	virtual GPM_RES STDCALL ToInterface(GPM_TYPE type, IPluginObject** _out_Ptr) {
-		if (type == GPM_TYPEOF(IPlayer)) {
-			*_out_Ptr = static_cast<IPlayer*>(this);
-			AddRef();
-			return GPM_OK;
-		}
-
-		if (type == GPM_TYPEOF(IPluginObject)) {
-			*_out_Ptr = static_cast<IPluginObject*>(this);
-			AddRef();
-			return GPM_OK;
-		}
-
-		*_out_Ptr = nullptr;
-		return GPM_ERR;
+	virtual const PVECTOR2 STDCALL GetPosition() {
+		return &mPosition;
 	}
 
 private:
 	VECTOR2 mPosition;
 	std::vector<IComponent*> mComponents;
-	GPM_UINT64 mRefCount;
 };
 
 int main()
@@ -88,7 +57,7 @@ int main()
 	// since we don't have to keep track of the memory between DLL's for these objects. The dynamic loaded libraries are, most likely,
 	// unloaded before the scope of the host- bound objects is unloaded.
 	DemoPlayer player;
-	context.RegisterGlobalObject(GPM_TYPEOF(IPlayer), &player);
+	context.RegisterGlobalObject(IID_Demo::IPlayer, &player);
 
 	// Load libraries
 #ifdef _DEBUG
@@ -101,11 +70,9 @@ int main()
 	context.LoadPlugin("demob");
 #endif
 
-	auto object = context.GetObject(GPM_TYPEOF(IGame));
+	auto object = context.GetObject(IID_Demo::IGame);
 	if (object != nullptr) {
-		IGame* game;
-		GPM_RES res = object->ToInterface(GPM_TYPEOF(IGame), (IPluginObject**)&game); assert(res == GPM_OK);
-		object->Release();
+		IGame* game = object->GetInterface<IGame>(); assert(game != nullptr);
 		game->StartGame();
 		game->Release();
 	}

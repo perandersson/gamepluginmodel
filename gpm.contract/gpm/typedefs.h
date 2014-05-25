@@ -4,7 +4,7 @@
 
 #ifdef _MSC_VER
 #define PLUGIN_API __declspec(dllexport)
-#elif __GCC__
+#elif __GNUC__
 #define PLUGIN_API __attribute__ ((dllexport))
 #else
 #error Unknown Compiler
@@ -13,7 +13,7 @@
 
 #ifdef _MSC_VER
 #define PLUGIN_API __declspec(dllimport)
-#elif __GCC__
+#elif __GNUC__
 #define PLUGIN_API __attribute__ ((dllimport))
 #else
 #error Unknown Compiler
@@ -24,7 +24,7 @@
 #ifdef _MSC_VER
 #define STDCALL __stdcall
 #define CDECL __cdecl
-#elif __GCC__
+#elif __GNUC__
 #define STDCALL __attribute__((stdcall))
 #define CDECL __attribute__((cdecl))
 #else
@@ -52,23 +52,6 @@ typedef unsigned int GPM_UINT32;
 
 #define GPM_OK 1
 #define GPM_ERR 0
-
-//
-// Define a plugin object type ID (ID for this specific interface).
-//
-// @param Type
-//			The interface type
-// @param UID
-//			A unique ID number. It's up to your project to select which ones you want. 
-//			Numbers below 10 are reserved for the plugin framework.
-#define DEFINE_GPMTYPE(Type, UID) static const GPM_TYPE Type##_ID = UID##LL
-
-//
-// Retrieves a plugin object type ID unique to the supplied Type. You are also free to manually type in <Type>_ID if you want.
-//
-// @param Type
-//			The type
-#define GPM_TYPEOF(Type) Type##_ID
 
 //
 // Declare a new interface useful for the plugin framework.
