@@ -38,8 +38,8 @@ public:
 		mGame = nullptr;
 	}
 
-	virtual void STDCALL OnObjectChanged(GPM_TYPE type, IPluginObject* object, Status status) {
-		if (status == STATUS_REGISTERED) {
+	virtual void STDCALL OnObjectChanged(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status) {
+		if (status == ObjectListenerStatus::REGISTERED) {
 			if (type == IID_Demo::IPlayer) {
 				IPlayer* player = interface_cast<IPlayer>(object);  assert(player != nullptr);
 				std::cout << "IPlayer is registered" << std::endl;

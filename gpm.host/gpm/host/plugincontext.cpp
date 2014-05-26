@@ -1,5 +1,4 @@
 #include "plugincontext.h"
-#include "moduleloader.h"
 #include "pluginlibrary.h"
 #include <iostream>
 #include <string>
@@ -16,8 +15,8 @@ namespace {
 	}
 }
 
-PluginContext::PluginContext()
-: mLogger(nullptr)
+PluginContext::PluginContext(const GPM_COMPILER_INFO* compilerInfo)
+: mCompilerInfo(compilerInfo), mLogger(nullptr)
 {
 
 }
@@ -35,9 +34,56 @@ void PluginContext::LoadPlugin(const char* path)
 		return;
 	}
 
+	LoadPluginAtPath(path);
+}
+
+void PluginContext::UnloadPlugins()
+{
+#ifdef _DEBUG
+	Debug("Unloading libraries");
+#endif
+
+	mGlobalObjects.clear();
+
+	Libraries::size_type size = mLibraries.size();
+	for (Libraries::size_type i = 0; i < size; ++i) {
+		mLibraries[i]->Stop();
+	}
+	mLibraries.clear();
+
+#ifdef _DEBUG
+	Debug("Libraries unloaded");
+#endif
+}
+
+void PluginContext::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status)
+{
+	Libraries::size_type size = mLibraries.size();
+	for (Libraries::size_type i = 0; i < size; ++i) {
+		mLibraries[i]->NotifyObjectListeners(type, object, status);
+	}
+
+	// Notify the listeners located on plugin-context level (i.e. the host application listeners)
+	ObjectListeners::iterator it = mObjectListeners.begin();
+	ObjectListeners::const_iterator end = mObjectListeners.end();
+	for (; it != end; ++it) {
+		auto listener = (*it);
+		object->AddRef();
+		listener->OnObjectChanged(type, object, status);
+		object->Release();
+	}
+}
+
+void PluginContext::LoadPluginAtPath(const char* path)
+{
 	auto library = ModuleLoader::GetLibraryHandle(path);
 	if (library == nullptr) {
 		Error(ToMessage("Library: '%s' not found", path).c_str());
+		return;
+	}
+
+	if (!VerifyLibraryWithHost(library, path)) {
+		Error(ToMessage("Library: '%s' was not compiled with a compatible compiler", path).c_str());
 		return;
 	}
 
@@ -72,48 +118,34 @@ void PluginContext::LoadPlugin(const char* path)
 #endif
 }
 
-void PluginContext::UnloadPlugins()
+bool PluginContext::VerifyLibraryWithHost(LibraryHandle library, const char* path)
 {
-#ifdef _DEBUG
-	Debug("Unloading libraries");
-#endif
-
-	mGlobalObjects.clear();
-
-	Libraries::size_type size = mLibraries.size();
-	for (Libraries::size_type i = 0; i < size; ++i) {
-		mLibraries[i]->Stop();
-	}
-	mLibraries.clear();
-
-#ifdef _DEBUG
-	Debug("Libraries unloaded");
-#endif
-}
-
-void PluginContext::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status)
-{
-	Libraries::size_type size = mLibraries.size();
-	for (Libraries::size_type i = 0; i < size; ++i) {
-		mLibraries[i]->NotifyObjectListeners(type, object, status);
+	auto getCompilerInfo = ModuleLoader::GetFunction<GPM1_GetCompilerInfoFunc>(library, "GPM1_GetCompilerInfo");
+	if (getCompilerInfo == nullptr) {
+		ModuleLoader::UnloadLibrary(library);
+		Error(ToMessage("Library: '%s' does not contain any compiler information. Function: 'GPM1_GetCompilerInfo' is missing", path).c_str());
+		return false;
 	}
 
-	// Notify the listeners located on plugin-context level (i.e. the host application listeners)
-	ObjectListeners::iterator it = mObjectListeners.begin();
-	ObjectListeners::const_iterator end = mObjectListeners.end();
-	for (; it != end; ++it) {
-		auto listener = (*it);
-		object->AddRef();
-		listener->OnObjectChanged(type, object, status);
-		object->Release();
+	auto info = (*getCompilerInfo)();
+	if (info == nullptr) {
+		Error(ToMessage("Library: '%s' does not contain any compiler information", path).c_str());
+		return false;
 	}
+
+	if (strcmp(mCompilerInfo->name, info->name) != 0) {
+		Error(ToMessage("Library: '%s' is build using: '%s' but the host is built using: '%s'", path, info->name, mCompilerInfo->name).c_str());
+		return false;
+	}
+	
+	return true;
 }
 
 void PluginContext::RegisterGlobalObject(GPM_TYPE type, IPluginObject* object)
 {
 	auto reference = std::shared_ptr<ObjectReference>(new ObjectReference(type, object));
 	mGlobalObjects.push_back(reference);
-	NotifyObjectListeners(type, object, IObjectListener::STATUS_REGISTERED);
+	NotifyObjectListeners(type, object, ObjectListenerStatus::REGISTERED);
 }
 
 void PluginContext::UnregisterGlobalObject(IPluginObject* object)
@@ -124,7 +156,7 @@ void PluginContext::UnregisterGlobalObject(IPluginObject* object)
 		if (reference->GetObject() == object) {
 			References::iterator it = mGlobalObjects.begin() + i;
 			mGlobalObjects.erase(it);
-			NotifyObjectListeners(reference->GetType(), object, IObjectListener::STATUS_UNREGISTERED);
+			NotifyObjectListeners(reference->GetType(), object, ObjectListenerStatus::UNREGISTERED);
 			break;
 		}
 	}
@@ -141,7 +173,7 @@ void PluginContext::Error(const char* message)
 void PluginContext::Debug(const char* message)
 {
 	if (mLogger != nullptr)
-		mLogger->Error(message);
+		mLogger->Debug(message);
 	else {
 #ifdef _DEBUG
 		std::cout << "[DEBUG] " << message << std::endl;

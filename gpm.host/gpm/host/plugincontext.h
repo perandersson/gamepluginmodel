@@ -1,5 +1,6 @@
 #pragma once
 #include "gpm/contract.h"
+#include "moduleloader.h"
 #include <vector>
 #include <memory>
 #include <list>
@@ -19,7 +20,7 @@ class PluginContext : public IPluginContext
 	friend class Plugin;
 
 public:
-	PluginContext();
+	PluginContext(const GPM_COMPILER_INFO* compilerInfo);
 	virtual ~PluginContext();
 
 	//
@@ -69,7 +70,20 @@ protected:
 	// @param type
 	// @param object
 	// @param status
-	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status);
+	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status);
+
+private:
+	//
+	// Load a specific library
+	//
+	// @param path
+	void LoadPluginAtPath(const char* path);
+
+	//
+	// Verify the supplied library that it's compatible with the host application
+	//
+	// @param library
+	bool VerifyLibraryWithHost(LibraryHandle library, const char* path);
 
 // IPluginContext
 public:
@@ -82,8 +96,17 @@ public:
 	virtual void STDCALL SetLogger(ILogger* logger);
 
 private:
+	const GPM_COMPILER_INFO* mCompilerInfo;
 	Libraries mLibraries;
 	References mGlobalObjects;
 	ObjectListeners mObjectListeners;
 	ILogger* mLogger;
 };
+
+//
+// Helper function used to create a specific type of plugin context
+template<class T>
+static inline std::shared_ptr<T> CreatePluginContext() {
+	static const GPM_COMPILER_INFO info = { { GPM_COMPILER_NAME } };
+	return std::shared_ptr<T>(new T(&info));
+}

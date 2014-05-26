@@ -1,5 +1,17 @@
 #pragma once
 
+#define GPM_COMPILER_NAME "Unknown"
+
+#ifdef _MSC_VER
+#undef GPM_COMPILER_NAME
+#define GPM_COMPILER_NAME "MSVC++"
+#endif
+
+#ifdef __GNUC__
+#undef GPM_COMPILER_NAME
+#define GPM_COMPILER_NAME "GCC"
+#endif
+
 #ifdef PLUGIN_EXPORTS
 
 #ifdef _MSC_VER
@@ -52,15 +64,6 @@ typedef unsigned int GPM_UINT32;
 
 #define GPM_OK 1
 #define GPM_ERR 0
-
-//
-// Declare a new interface useful for the plugin framework.
-//
-// @param Name
-//			The interface name
-// @param Inherits
-//			The class that the new interface inherits from. If nothing then specify IPluginObject
-#define DECLARE_INTERFACE(Name, Inherits) struct PLUGIN_API Name : public Inherits
 
 //
 // Releases the supplied object, if it's not null

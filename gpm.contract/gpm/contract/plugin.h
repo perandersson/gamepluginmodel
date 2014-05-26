@@ -3,38 +3,41 @@
 #include "plugincontext.h"
 #include "objectlistener.h"
 
+struct PLUGIN_API PluginStatus
+{
+	enum Enum {
+		//
+		// Symbolizes that the plugin is starting up. It is in this step that 
+		// services are registered
+		STARTING = 0,
+
+		//
+		// Symbolizes that the plugin is active and all it's services registered
+		// inside the plugin engine
+		ACTIVE = 1,
+
+		//
+		// The plugin is stopping and is currently removing it's internal resources
+		STOPPING = 2,
+
+		//
+		// The plugin has stopped, it is not unloaded from memory though since references
+		// are still being kept by other plugins.
+		STOPPED = 3,
+	};
+};
+
 //
 // Interface that represents the entry- and exit point of a plugin.
 //
 // This instance is never removed during the lifetime of the plugin that owns it.
 struct PLUGIN_API IPlugin
 {
-	enum PLUGIN_API Status {
-		//
-		// Symbolizes that the plugin is starting up. It is in this step that 
-		// services are registered
-		STATUS_STARTING = 0,
-
-		//
-		// Symbolizes that the plugin is active and all it's services registered
-		// inside the plugin engine
-		STATUS_ACTIVE = 2,
-
-		//
-		// The plugin is stopping and is currently removing it's internal resources
-		STATUS_STOPPING = 3,
-
-		//
-		// The plugin has stopped, it is not unloaded from memory though since references
-		// are still being kept by other plugins.
-		STATUS_STOPPED = 4,
-	};
-
 	virtual STDCALL ~IPlugin() {}
 
 	//
 	// @return The status for this plugin
-	virtual Status STDCALL GetStatus() const = 0;
+	virtual PluginStatus::Enum STDCALL GetStatus() const = 0;
 
 	//
 	// Register a new plugin object. 

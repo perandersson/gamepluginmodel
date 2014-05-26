@@ -40,7 +40,7 @@ IPluginObject* PluginLibrary::FindObjectByType(GPM_TYPE type) const
 	return mPlugin->FindObjectByType(type);
 }
 
-void PluginLibrary::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status)
+void PluginLibrary::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status)
 {
 	mPlugin->NotifyObjectListeners(type, object, status);
 }

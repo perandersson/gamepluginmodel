@@ -29,7 +29,7 @@ void Plugin::UnloadObjects()
 	mReferences.clear();
 }
 
-void Plugin::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status)
+void Plugin::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status)
 {
 	ObjectListeners::iterator it = mObjectListeners.begin();
 	ObjectListeners::const_iterator end = mObjectListeners.end();
@@ -41,7 +41,7 @@ void Plugin::NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObject
 	}
 }
 
-Plugin::Status STDCALL Plugin::GetStatus() const
+PluginStatus::Enum STDCALL Plugin::GetStatus() const
 {
 	return mStatus;
 }
@@ -50,7 +50,7 @@ void STDCALL Plugin::RegisterObject(GPM_TYPE type, IPluginObject* object)
 {
 	auto reference = std::shared_ptr<ObjectReference>(new ObjectReference(type, object));
 	mReferences.push_back(reference);
-	mPluginContext->NotifyObjectListeners(type, object, IObjectListener::STATUS_REGISTERED);
+	mPluginContext->NotifyObjectListeners(type, object, ObjectListenerStatus::REGISTERED);
 }
 
 void STDCALL Plugin::UnregisterObject(IPluginObject* object)
@@ -61,7 +61,7 @@ void STDCALL Plugin::UnregisterObject(IPluginObject* object)
 		if (reference->GetObject() == object) {
 			References::iterator it = mReferences.begin() + i;
 			mReferences.erase(it);
-			mPluginContext->NotifyObjectListeners(reference->GetType(), object, IObjectListener::STATUS_UNREGISTERED);
+			mPluginContext->NotifyObjectListeners(reference->GetType(), object, ObjectListenerStatus::UNREGISTERED);
 			break;
 		}
 	}

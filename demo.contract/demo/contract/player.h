@@ -12,7 +12,7 @@ struct PLUGIN_API IPlayer : public TPluginInterface<IID_Demo::IPlayer>
 
 	virtual void STDCALL RemoveComponent(IComponent* component) = 0;
 
-	virtual void STDCALL SetPosition(const VECTOR2& position) = 0;
+	virtual void STDCALL SetPosition(const VECTOR2* position) = 0;
 
 	virtual const PVECTOR2 STDCALL GetPosition() = 0;
 };

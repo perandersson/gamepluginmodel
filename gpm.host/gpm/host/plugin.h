@@ -28,10 +28,10 @@ public:
 
 	//
 	// Notify all the object listeners added to this plugin
-	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status);
+	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status);
 
 public:
-	virtual Status STDCALL GetStatus() const;
+	virtual PluginStatus::Enum STDCALL GetStatus() const;
 	virtual void STDCALL RegisterObject(GPM_TYPE type, IPluginObject* object);
 	virtual void STDCALL UnregisterObject(IPluginObject* object);
 	virtual void STDCALL AddObjectListener(IObjectListener* listener);
@@ -43,7 +43,7 @@ public:
 
 private:
 	PluginContext* mPluginContext;
-	Status mStatus;
+	PluginStatus::Enum mStatus;
 	References mReferences;
 	ObjectListeners mObjectListeners;
 };

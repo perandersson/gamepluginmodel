@@ -35,8 +35,8 @@ public:
 		component->Release();
 	}
 
-	virtual void STDCALL SetPosition(const VECTOR2& position) {
-		mPosition = position;
+	virtual void STDCALL SetPosition(const VECTOR2* position) {
+		mPosition = *position;
 	}
 
 	virtual const PVECTOR2 STDCALL GetPosition() {
@@ -51,26 +51,27 @@ private:
 int main()
 {
 	// Create a plugin context instance
-	PluginContext context;
+	std::shared_ptr<PluginContext> context = CreatePluginContext<PluginContext>();
 
 	// Register host-bound objects. Although the interface requires AddRef and Release, it's not really necessary to implement them
 	// since we don't have to keep track of the memory between DLL's for these objects. The dynamic loaded libraries are, most likely,
 	// unloaded before the scope of the host- bound objects is unloaded.
 	DemoPlayer player;
-	context.RegisterGlobalObject(IID_Demo::IPlayer, &player);
+	context->RegisterGlobalObject(IID_Demo::IPlayer, &player);
 
 	// Load libraries
 #ifdef _DEBUG
-	context.LoadPlugin("demo.game_d");
-	context.LoadPlugin("demoa_d");
-	context.LoadPlugin("demob_d");
+	context->LoadPlugin("demo.game_d");
+	context->LoadPlugin("demoa_d");
+	context->LoadPlugin("demob_d");
 #else
-	context.LoadPlugin("demo.game");
-	context.LoadPlugin("demoa");
-	context.LoadPlugin("demob");
+	context->LoadPlugin("demo.game");
+	context->LoadPlugin("demoa");
+	context->LoadPlugin("demob");
 #endif
+	context->LoadPlugin("../../../CodeBlocks/gcc_component/bin/Debug/gcc_component");
 
-	auto object = context.GetObject(IID_Demo::IGame);
+	auto object = context->GetObject(IID_Demo::IGame);
 	if (object != nullptr) {
 		IGame* game = interface_cast<IGame>(object); assert(game != nullptr);
 		game->StartGame();
@@ -78,7 +79,7 @@ int main()
 	}
 
 	// Unload libraries
-	context.UnloadPlugins();
+	context->UnloadPlugins();
 
 	std::cout << "Press any key to continue" << std::endl;
 	std::cin.get();

@@ -27,7 +27,7 @@ public:
 
 	//
 	// Notify all the object listeners added to this plugin
-	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, IObjectListener::Status status);
+	void NotifyObjectListeners(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status);
 
 private:
 	LibraryHandle mLibrary;

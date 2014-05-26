@@ -1,6 +1,15 @@
 #pragma once
 #include "pluginobject.h"
 
+struct PLUGIN_API ObjectListenerStatus
+{
+	enum Enum
+	{
+		REGISTERED = 0,
+		UNREGISTERED
+	};
+};
+
 //
 // Interface used when the plugin developer wants to know whenever new objects are
 // exposed from the plugin framework.
@@ -9,16 +18,6 @@
 // the listener is automatically unregistered during the plugin's SHUTDOWN phase.
 struct PLUGIN_API IObjectListener
 {
-	enum PLUGIN_API Status {
-		//
-		// Status if a service is registered
-		STATUS_REGISTERED = 0,
-
-		//
-		// Status if a service is unregistered
-		STATUS_UNREGISTERED = 1
-	};
-
 	virtual STDCALL ~IObjectListener() {}
 
 	//
@@ -32,6 +31,6 @@ struct PLUGIN_API IObjectListener
 	//			in use. 
 	// @param status
 	//			The objects new status
-	virtual void STDCALL OnObjectChanged(GPM_TYPE type, IPluginObject* object, Status status) = 0;
+	virtual void STDCALL OnObjectChanged(GPM_TYPE type, IPluginObject* object, ObjectListenerStatus::Enum status) = 0;
 };
 
