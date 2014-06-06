@@ -28,7 +28,8 @@ public:
 		std::cout << "DemoGame_Activator::Start" << std::endl;
 		mGame = new DemoGame();
 		plugin->AddObjectListener(this);
-		plugin->RegisterObject(IID_Demo::IGame, mGame);
+		mGame->RegisterObject(plugin);
+		//plugin->RegisterObject(IID_Demo::IGame, mGame);
 		return GPM_OK;
 	}
 

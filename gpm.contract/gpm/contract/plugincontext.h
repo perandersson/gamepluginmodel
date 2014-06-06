@@ -1,6 +1,8 @@
 #pragma once
-#include "pluginobject.h"
 #include "logger.h"
+
+struct PLUGIN_API IPluginObject;
+struct PLUGIN_API IObjectListener;
 
 //
 // This interface symbolizes the entire lifetime of the host application. 

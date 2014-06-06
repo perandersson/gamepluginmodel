@@ -1,5 +1,4 @@
 #pragma once
-#include "pluginobject.h"
 #include "plugincontext.h"
 #include "objectlistener.h"
 
@@ -26,6 +25,8 @@ struct PLUGIN_API PluginStatus
 		STOPPED = 3,
 	};
 };
+
+struct PLUGIN_API IPluginObject;
 
 //
 // Interface that represents the entry- and exit point of a plugin.

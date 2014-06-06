@@ -30,7 +30,8 @@ public:
 	virtual GPM_RES STDCALL Start(IPlugin* plugin) {
 		std::cout << "DemoA_Activator:Start" << std::endl;
 		mComponent = new DemoA_Component();
-		plugin->RegisterObject(IID_Demo::IComponent, mComponent);
+		mComponent->RegisterObject(plugin);
+		//plugin->RegisterObject(IID_Demo::IComponent, mComponent);
 		return GPM_OK;
 	}
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "../typedefs.h"
+#include "plugin.h"
+#include "plugincontext.h"
 
 //
 // Base class for all objects exposed from the plugin framework. Whenever a new plugin is requesting
@@ -90,6 +92,16 @@ public:
 			return GPM_ERR;
 		}
 	}
+
+	//
+	// Method for simplifying the object registration. This ensures that you always supply the correct whenever registering an object. It also
+	// ensures that an object registers all it's ID's (whenever inheritance is used).
+	//
+	// This replaces:
+	// plugin->RegisterObject(IID_YourType::IMyInterface, mGame);
+	virtual void RegisterObject(IPlugin* plugin) {
+		plugin->RegisterObject(TypeID, this);
+	}
 };
 
 template<GPM_TYPE ID, class Base>
@@ -101,6 +113,11 @@ public:
 public:
 	virtual GPM_TYPE STDCALL GetTypeID() {
 		return TypeID;
+	}
+
+	virtual void RegisterObject(IPlugin* plugin) {
+		plugin->RegisterObject(TypeID, this);
+		Base::RegisterObject(plugin);
 	}
 
 public:
