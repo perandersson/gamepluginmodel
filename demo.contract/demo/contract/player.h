@@ -4,7 +4,7 @@
 #include "component.h"
 #include "vector2.h"
 
-struct PLUGIN_API IPlayer : public TPluginInterface<IID_Demo::IPlayer>
+struct PLUGIN_API IPlayer : public TPluginInterface<IID_Demo::IPlayer, IPluginObject>
 {
 	virtual STDCALL ~IPlayer() {}
 

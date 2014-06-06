@@ -27,6 +27,10 @@ struct PLUGIN_API IPluginObject
 	virtual GPM_UINT64 STDCALL Release() = 0;
 
 	//
+	// Retrieves the unique ID for this type
+	virtual GPM_TYPE STDCALL GetTypeID() = 0;
+
+	//
 	// Converts this type into a new type - if possible. This is up the the one exposing
 	// the original pointer to begin with.
 	//
@@ -38,31 +42,11 @@ struct PLUGIN_API IPluginObject
 	// @param _out_Ptr
 	//			A memory location where we put the new pointer
 	// @return GPM_OK if successfull; GPM_ERR otherwise;
-	virtual GPM_RES STDCALL ToInterface(GPM_TYPE type, IPluginObject** _out_Ptr) = 0;
+	virtual GPM_RES STDCALL GetInterface(GPM_TYPE type, IPluginObject** _out_Ptr) = 0;
 };
 
-//
-// Converts this into the supplied type - if possible. If you are planning on saving the pointer in your local memory area then
-// call {@code IPluginObject::AddRef} and then release whenever you're done with it.
-//
-// @param type
-//			The type we want to convert this object into
-// @return A valid pointer if possible; nullptr otherwise
-template<class T>
-inline T* interface_cast(IPluginObject* obj) {
-	if (obj == nullptr)
-		return nullptr;
-
-	T* ptr = nullptr;
-	if (obj->ToInterface(T::TypeID, (IPluginObject**)(&ptr)) != GPM_OK) {
-		return nullptr;
-	}
-	ptr->Release();
-	return ptr;
-}
-
-template<GPM_TYPE ID>
-struct PLUGIN_API TPluginInterface : public IPluginObject
+template<GPM_TYPE ID, class Base>
+struct PLUGIN_API TPluginInterface : public Base
 {
 protected:
 	GPM_UINT64 mRefCount;
@@ -91,14 +75,39 @@ public:
 		return mRefCount;
 	}
 
-	virtual GPM_RES STDCALL ToInterface(GPM_TYPE type, IPluginObject** _out_Ptr) {
-		if (type == TypeID) {
+	virtual GPM_TYPE STDCALL GetTypeID() {
+		return TypeID;
+	}
+
+	virtual GPM_RES STDCALL GetInterface(GPM_TYPE type, IPluginObject** _out_Ptr) {
+		switch (type) {
+		case TypeID:
 			*_out_Ptr = this;
 			AddRef();
 			return GPM_OK;
+		default:
+			*_out_Ptr = nullptr;
+			return GPM_ERR;
 		}
-		*_out_Ptr = nullptr;
-		return GPM_ERR;
 	}
 };
 
+//
+// Converts this into the supplied type - if possible. If you are planning on saving the pointer in your local memory area then
+// call {@code IPluginObject::AddRef} and then release whenever you're done with it.
+//
+// @param type
+//			The type we want to convert this object into
+// @return A valid pointer if possible; nullptr otherwise
+template<class T>
+static T* interface_cast(IPluginObject* obj) {
+	if (obj == nullptr)
+		return nullptr;
+
+	T* ptr = nullptr;
+	if (obj->GetInterface(T::TypeID, (IPluginObject**)(&ptr)) != GPM_OK) {
+		return nullptr;
+	}
+	ptr->Release();
+	return ptr;
+}

@@ -27,15 +27,16 @@ struct PLUGIN_API IPluginActivator
 // Structure used by the host application to identify the plugin
 //
 
-struct GPM_COMPILER_INFO {
+struct GPM_ACTIVATOR_INFO {
 	char name[128];
+	char compiler[128];
 };
 
 // Signature for the activator retrival function used by the plugin framework
 typedef IPluginActivator*(*GPM1_GetActivatorFunc)();
 
 // Signature for the function used to retrieve information about the compiler used build the plugin
-typedef const GPM_COMPILER_INFO*(*GPM1_GetCompilerInfoFunc)();
+typedef const GPM_ACTIVATOR_INFO*(*GPM1_GetActivatorInfoFunc)();
 
 //
 // Defines which class is the plugin's activator class.
@@ -44,8 +45,8 @@ extern "C" { \
 	PLUGIN_API IPluginActivator* CDECL GPM1_GetActivator() { \
 		return new ActivatorType(); \
 	}\
-	static const GPM_COMPILER_INFO _GPM_CompilerInfo = { { GPM_COMPILER_NAME } }; \
-	PLUGIN_API const GPM_COMPILER_INFO* CDECL GPM1_GetCompilerInfo() { \
-		return &_GPM_CompilerInfo; \
+	static const GPM_ACTIVATOR_INFO _GPM_ActivatorInfo = { { #ActivatorType }, { GPM_COMPILER_NAME } }; \
+	PLUGIN_API const GPM_ACTIVATOR_INFO* CDECL GPM1_GetActivatorInfo() { \
+		return &_GPM_ActivatorInfo; \
 	} \
 }

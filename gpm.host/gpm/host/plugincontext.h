@@ -20,7 +20,7 @@ class PluginContext : public IPluginContext
 	friend class Plugin;
 
 public:
-	PluginContext(const GPM_COMPILER_INFO* compilerInfo);
+	PluginContext(const GPM_ACTIVATOR_INFO* compilerInfo);
 	virtual ~PluginContext();
 
 	//
@@ -96,7 +96,7 @@ public:
 	virtual void STDCALL SetLogger(ILogger* logger);
 
 private:
-	const GPM_COMPILER_INFO* mCompilerInfo;
+	const GPM_ACTIVATOR_INFO* mCompilerInfo;
 	Libraries mLibraries;
 	References mGlobalObjects;
 	ObjectListeners mObjectListeners;
@@ -107,6 +107,6 @@ private:
 // Helper function used to create a specific type of plugin context
 template<class T>
 static inline std::shared_ptr<T> CreatePluginContext() {
-	static const GPM_COMPILER_INFO info = { { GPM_COMPILER_NAME } };
+	static const GPM_ACTIVATOR_INFO info = { { "HOST" }, { GPM_COMPILER_NAME } };
 	return std::shared_ptr<T>(new T(&info));
 }

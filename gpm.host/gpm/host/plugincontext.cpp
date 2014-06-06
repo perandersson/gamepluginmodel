@@ -15,7 +15,7 @@ namespace {
 	}
 }
 
-PluginContext::PluginContext(const GPM_COMPILER_INFO* compilerInfo)
+PluginContext::PluginContext(const GPM_ACTIVATOR_INFO* compilerInfo)
 : mCompilerInfo(compilerInfo), mLogger(nullptr)
 {
 
@@ -120,10 +120,10 @@ void PluginContext::LoadPluginAtPath(const char* path)
 
 bool PluginContext::VerifyLibraryWithHost(LibraryHandle library, const char* path)
 {
-	auto getCompilerInfo = ModuleLoader::GetFunction<GPM1_GetCompilerInfoFunc>(library, "GPM1_GetCompilerInfo");
+	auto getCompilerInfo = ModuleLoader::GetFunction<GPM1_GetActivatorInfoFunc>(library, "GPM1_GetActivatorInfo");
 	if (getCompilerInfo == nullptr) {
 		ModuleLoader::UnloadLibrary(library);
-		Error(ToMessage("Library: '%s' does not contain any compiler information. Function: 'GPM1_GetCompilerInfo' is missing", path).c_str());
+		Error(ToMessage("Library: '%s' does not contain any compiler information. Function: 'GPM1_GetActivatorInfoFunc' is missing", path).c_str());
 		return false;
 	}
 
@@ -133,8 +133,8 @@ bool PluginContext::VerifyLibraryWithHost(LibraryHandle library, const char* pat
 		return false;
 	}
 
-	if (strcmp(mCompilerInfo->name, info->name) != 0) {
-		Error(ToMessage("Library: '%s' is build using: '%s' but the host is built using: '%s'", path, info->name, mCompilerInfo->name).c_str());
+	if (strcmp(mCompilerInfo->compiler, info->compiler) != 0) {
+		Error(ToMessage("Library: '%s' is build using: '%s' but the host is built using: '%s'", path, info->compiler, mCompilerInfo->compiler).c_str());
 		return false;
 	}
 	
