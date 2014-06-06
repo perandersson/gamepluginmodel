@@ -24,5 +24,8 @@
     <ClInclude Include="..\..\gpm.contract\gpm\contract\pluginobject.h">
       <Filter>contract</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\gpm.contract\gpm\contract\scopedobject.h">
+      <Filter>contract</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

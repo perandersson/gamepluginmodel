@@ -17,6 +17,7 @@
     <ClInclude Include="..\..\gpm.contract\gpm\contract\pluginactivator.h" />
     <ClInclude Include="..\..\gpm.contract\gpm\contract\plugincontext.h" />
     <ClInclude Include="..\..\gpm.contract\gpm\contract\pluginobject.h" />
+    <ClInclude Include="..\..\gpm.contract\gpm\contract\scopedobject.h" />
     <ClInclude Include="..\..\gpm.contract\gpm\typedefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

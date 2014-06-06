@@ -4,7 +4,7 @@
 
 struct PLUGIN_API IPlayer;
 
-struct PLUGIN_API IComponent : public TPluginInterface<IID_Demo::IComponent, IPluginObject>
+struct PLUGIN_API IComponent : public TPluginInterface<IID_Demo::IComponent>
 {
 	virtual STDCALL ~IComponent() {}
 

@@ -3,7 +3,7 @@
 
 //
 // Base class for all objects exposed from the plugin framework. Whenever a new plugin is requesting
-// a IPluginObject1 resource then {@code IPluginObject::AddRef} is called automatically. The plugin
+// a IPluginObject resource then {@code IPluginObject::AddRef} is called automatically. The plugin
 // is then responsible for releasing it's pointer using {@code IPluginObject::Release} whenever it's not
 // used anymore. 
 //
@@ -45,8 +45,8 @@ struct PLUGIN_API IPluginObject
 	virtual GPM_RES STDCALL GetInterface(GPM_TYPE type, IPluginObject** _out_Ptr) = 0;
 };
 
-template<GPM_TYPE ID, class Base>
-struct PLUGIN_API TPluginInterface : public Base
+template<GPM_TYPE ID>
+struct PLUGIN_API TPluginInterface : public IPluginObject
 {
 protected:
 	GPM_UINT64 mRefCount;
@@ -55,16 +55,16 @@ public:
 	static const GPM_TYPE TypeID = ID;
 
 public:
-	TPluginInterface() : mRefCount(1) 
+	TPluginInterface() : mRefCount(1)
 	{
 	}
 
-	virtual STDCALL ~TPluginInterface() 
+	virtual STDCALL ~TPluginInterface()
 	{
 	}
-	
-	virtual GPM_UINT64 STDCALL AddRef() { 
-		return ++mRefCount; 
+
+	virtual GPM_UINT64 STDCALL AddRef() {
+		return ++mRefCount;
 	}
 
 	virtual GPM_UINT64 STDCALL Release() {
@@ -88,6 +88,22 @@ public:
 		default:
 			*_out_Ptr = nullptr;
 			return GPM_ERR;
+		}
+	}
+};
+
+template<GPM_TYPE ID, class Base>
+struct PLUGIN_API TInheritedPluginInterface : public Base
+{
+public:
+	virtual GPM_RES STDCALL GetInterface(GPM_TYPE type, IPluginObject** _out_Ptr) {
+		switch (type) {
+		case TypeID:
+			*_out_Ptr = this;
+			AddRef();
+			return GPM_OK;
+		default:
+			return Base::GetInterface(type, _out_Ptr);
 		}
 	}
 };

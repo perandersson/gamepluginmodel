@@ -5,6 +5,7 @@
 #include "contract/plugincontext.h"
 #include "contract/pluginobject.h"
 #include "contract/logger.h"
+#include "contract/scopedobject.h"
 
 struct IID_GamePluginModel {
 	enum Enum {
