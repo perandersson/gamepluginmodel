@@ -46,7 +46,7 @@ struct PLUGIN_API IPluginObject
 };
 
 template<GPM_TYPE ID>
-struct PLUGIN_API TPluginInterface : public IPluginObject
+struct PLUGIN_API TPluginInterface : IPluginObject
 {
 protected:
 	GPM_UINT64 mRefCount;
@@ -93,8 +93,16 @@ public:
 };
 
 template<GPM_TYPE ID, class Base>
-struct PLUGIN_API TInheritedPluginInterface : public Base
+struct PLUGIN_API TInheritedPluginInterface : Base
 {
+public:
+	static const GPM_TYPE TypeID = ID;
+
+public:
+	virtual GPM_TYPE STDCALL GetTypeID() {
+		return TypeID;
+	}
+
 public:
 	virtual GPM_RES STDCALL GetInterface(GPM_TYPE type, IPluginObject** _out_Ptr) {
 		switch (type) {
